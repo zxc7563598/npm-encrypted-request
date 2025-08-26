@@ -101,7 +101,7 @@ console.log(encrypted);
 
 1. AES encryption uses **AES-128-CBC**; the key and IV must be exactly 16 bytes.
 2. The frontend timestamp is in seconds, and the allowable time difference with the PHP backend is configurable.
-3. Ensure the `appKey` appKey matches the PHP backend; otherwise, signature verification will fail.
+3. Ensure the `appKey` / `aesKey` / `aesIv` matches the PHP backend; otherwise, signature verification will fail.
 4. The token is optional, and the PHP backend can decide whether to verify it based on whitelisted paths.
 
 ## Development & Build
