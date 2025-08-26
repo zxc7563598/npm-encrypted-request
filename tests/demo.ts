@@ -1,4 +1,4 @@
-import { encryptRequest, EncryptOptions } from '../src/index.js';
+import { encryptRequest, EncryptOptions } from "../src/index.js";
 const options: EncryptOptions = {
   appKey: "JzmiM5jHFlG8qdjb8nSKK58NmSLS2h4Z",
   aesKey: "hpTIDOsgBTJkBDol",

@@ -15,11 +15,18 @@ export function encryptRequest(
   const timestamp = Math.floor(Date.now() / 1000);
   const sign = generateSign(options.appKey, timestamp);
   const en_data = aesEncrypt(data, options.aesKey, options.aesIv);
-
-  return {
-    timestamp,
-    sign,
-    en_data,
-    token: options.token || undefined,
-  };
+  if (options.token) {
+    return {
+      timestamp,
+      sign,
+      en_data,
+      token: options.token,
+    };
+  } else {
+    return {
+      timestamp,
+      sign,
+      en_data,
+    };
+  }
 }
