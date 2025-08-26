@@ -68,7 +68,7 @@ const encrypted = encryptRequest(data, options);
 console.log(encrypted);
 ```
 
-## API 参考
+## API Reference
 
 ### `EncryptOptions`​
 
