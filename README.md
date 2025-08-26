@@ -1,15 +1,14 @@
 # npm-encrypted-request
-
-一个简单的前端加密助手，用于与 [hejunjie/encrypted-request](https://github.com/hejunjie/encrypted-request) PHP 包配合使用。
+一个简单的前端加密助手，用于与 [hejunjie/encrypted-request](https://github.com/zxc7563598/php-encrypted-request) PHP 包配合使用，实现前端请求参数的 AES 加密与 MD5 签名生成。
 
 ## 功能特性
 
-- 🔐 AES 加密数据
+- 🔐 AES-128-CBC 加密数据
 - ✍️ MD5 签名生成
-- ⏰ 自动时间戳生成
-- 🎯 支持可选 token
+- ⏰ 自动时间戳生成（秒级）
+- 🎯 可选 token 透传
 - 📦 TypeScript 支持
-- 🚀 ES 模块支持
+- 🚀 支持 ES 模块与 CommonJS
 
 ## 安装
 
@@ -17,17 +16,17 @@
 npm install hejunjie-encrypted-request
 ```
 
-## 使用方法
+## 快速使用
 
-### 基本用法
+### TypeScript 示例
 
 ```typescript
 import { encryptRequest, EncryptOptions } from 'hejunjie-encrypted-request';
 
 const options: EncryptOptions = {
-  appKey: "your-app-key",
-  aesKey: "your-aes-key",
-  aesIv: "your-aes-iv",
+  appKey: "your-app-key", // 签名密钥，用于接口签名校验（32位字母或数字）
+  aesKey: "your-aes-key", // AES 加密的密钥（16位）
+  aesIv: "your-aes-iv",   // AES 加密的初始化向量（16位）
   token: "optional-token" // 可选
 };
 
@@ -35,7 +34,6 @@ const data = { message: "Hello World" };
 const encrypted = encryptRequest(data, options);
 
 console.log(encrypted);
-// 输出:
 // {
 //   timestamp: 1756188634,
 //   sign: '6a9c8f16757de0f42bd97173eda1393b',
@@ -44,99 +42,69 @@ console.log(encrypted);
 // }
 ```
 
-### 无 token 使用
+### JavaScript 示例
 
-```typescript
-const options: EncryptOptions = {
-  appKey: "your-app-key",
-  aesKey: "your-aes-key",
-  aesIv: "your-aes-iv"
-  // 不设置 token
+```javascript
+const { encryptRequest } = require('hejunjie-encrypted-request');
+
+const options = {
+  appKey: "your-app-key", // 签名密钥，用于接口签名校验（32位字母或数字）
+  aesKey: "your-aes-key", // AES 加密的密钥（16位）
+  aesIv: "your-aes-iv",   // AES 加密的初始化向量（16位）
 };
 
+const data = { message: "Hello World" };
 const encrypted = encryptRequest(data, options);
-// token 字段将为 undefined
+
+console.log(encrypted);
 ```
 
 ## API 参考
 
-### EncryptOptions
+### `EncryptOptions`​
 
-| 字段 | 类型 | 必需 | 描述 |
-|------|------|------|------|
-| `appKey` | string | ✅ | 应用密钥，用于生成签名 |
-| `aesKey` | string | ✅ | AES 加密密钥 |
-| `aesIv` | string | ✅ | AES 加密向量 |
-| `token` | string | ❌ | 可选的认证令牌 |
+|字段|类型|必需|描述|
+| ------| --------| ------| --------------------------------------|
+|​`appKey`​|string|✅|应用密钥，用于生成签名|
+|​`aesKey`​|string|✅|AES 加密密钥（16 位）|
+|​`aesIv`​|string|✅|AES 初始化向量（16 位）|
+|​`token`​|string|❌|可选的认证令牌，PHP 端可用于用户验证|
 
-### encryptRequest(data, options)
+### `encryptRequest(data, options)`​
 
-加密请求数据并生成签名。
+- **参数**
 
-**参数:**
-- `data: object` - 要加密的数据对象
-- `options: EncryptOptions` - 加密选项
+  - ​`data`：`object`，要加密的请求数据
+  - ​`options`：`EncryptOptions`，加密配置
+- **返回**：加密后的请求对象：
 
-**返回值:**
-```typescript
+```ts
 {
-  timestamp: number;    // Unix 时间戳（秒）
-  sign: string;         // MD5 签名
-  en_data: string;      // AES 加密后的数据（Base64）
-  token?: string;       // 可选的令牌
+  timestamp: number,  // 当前秒级时间戳
+  sign: string,       // MD5 签名
+  en_data: string,    // AES 加密后的数据
+  token?: string      // 可选 token
 }
 ```
 
-## 开发
+## 注意事项
 
-### 安装依赖
+1. AES 加密使用 **AES-128-CBC**，密钥与向量需严格为 16 字节。
+2. 前端时间戳为秒级，与 PHP 后端默认时间差允许范围可配置。
+3. 确保 `appKey` 与 PHP 后端一致，否则签名校验会失败。
+4. token 为可选字段，PHP 端可根据白名单路径决定是否校验。
 
-```bash
-npm install
-```
+## 开发与构建
 
-### 构建
+- TypeScript 源码位于 `src/`，构建后输出到 `dist/`。
+- 构建命令：
 
 ```bash
 npm run build
 ```
 
-### 开发模式（监听文件变化）
+## 相关仓库
 
-```bash
-npm run dev
-```
+- PHP 解密端：[hejunjie/encrypted-request](https://github.com/zxc7563598/php-encrypted-request)
 
-### 运行测试
-
-```bash
-# 运行基本测试
-npm test
-
-# 运行完整测试
-npm run test:full
-
-# 监听模式测试
-npm run test:watch
-```
-
-### 清理构建文件
-
-```bash
-npm run clean
-```
-
-## 技术细节
-
-- **加密算法**: AES-CBC 模式，PKCS7 填充
-- **签名算法**: MD5
-- **时间戳**: Unix 时间戳（秒）
-- **输出格式**: Base64 编码
-
-## 许可证
-
-MIT License
-
-## 作者
-
-hejunjie
+‍
