@@ -1,0 +1,41 @@
+{
+  "name": "hejunjie-encrypted-request",
+  "version": "1.0.1",
+  "description": "A simple encryption helper for frontend to work with hejunjie/encrypted-request PHP package.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "node --loader ts-node/esm tests/demo.ts",
+    "test:watch": "node --loader ts-node/esm --watch tests/demo.ts",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "encryption",
+    "aes",
+    "request",
+    "security",
+    "php",
+    "vue",
+    "typescript"
+  ],
+  "author": "hejunjie",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@types/crypto-js": "^4.2.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  },
+  "files": [
+    "dist"
+  ]
+}
