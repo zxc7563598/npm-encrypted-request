@@ -1,7 +1,7 @@
 {
   "name": "hejunjie-encrypted-request",
-  "version": "1.0.1",
-  "description": "A simple encryption helper for frontend to work with hejunjie/encrypted-request PHP package.",
+  "version": "1.0.2",
+  "description": "一个简单的前端加密助手，与 hejunjie/encrypted-request PHP 包配合使用 | A simple encryption helper for frontend to work with hejunjie/encrypted-request PHP package",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
