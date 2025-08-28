@@ -1,6 +1,6 @@
 import { encryptRequest, EncryptOptions } from "../src/index.js";
 
-const pubKey = `-----BEGIN PUBLIC KEY-----
+const pubKey: string = `-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvsu8OaVsMQ6bYZBvN8tN
 swhxRB5giPfMH7es3VqUVBZe/mBivLRGrNLr0FQx4HclfLpw96zh68FXMBfo8ZjF
 vBQxdfPlvRUiKfmXAGHDgv6pQBSnSE+WNBDgYEqOA9qYYpQSgNqR5vib76dkpwry

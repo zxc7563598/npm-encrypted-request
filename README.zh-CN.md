@@ -11,12 +11,12 @@
 
 ## 功能特性
 
-- 🔐 AES-128-CBC 加密数据
-- ✍️ MD5 签名生成
-- ⏰ 自动时间戳生成（秒级）
-- 🎯 可选 token 透传
+- ♾️ 混合加密，AES 密钥随机生成，前端仅需要配置公钥即可
+- 🔐 AES-128-CBC 加密数据，密钥自动生成，不进行存储
+- ✍️ 动态 MD5 签名生成
 - 📦 TypeScript 支持
 - 🚀 支持 ES 模块与 CommonJS
+- 🧠 对代码改动极小，配套 php 包无需关注原理即可安全传输数据
 
 ## 安装
 
@@ -31,11 +31,12 @@ npm install hejunjie-encrypted-request
 ```typescript
 import { encryptRequest, EncryptOptions } from "hejunjie-encrypted-request";
 
+const pubKey: string = `-----BEGIN PUBLIC KEY-----
+您的公钥，可以替换为读取pem文件等操作
+-----END PUBLIC KEY-----`;
+
 const options: EncryptOptions = {
-  appKey: "your-app-key", // 签名密钥，用于接口签名校验（32位字母或数字）
-  aesKey: "your-aes-key", // AES 加密的密钥（16位）
-  aesIv: "your-aes-iv", // AES 加密的初始化向量（16位）
-  token: "optional-token", // 可选的认证令牌，PHP 端可用于用户验证
+  rsaPubKey: pubKey,
 };
 
 const data = { message: "Hello World" };
@@ -43,10 +44,10 @@ const encrypted = encryptRequest(data, options);
 
 console.log(encrypted);
 // {
-//   timestamp: 1756188634,
-//   sign: '6a9c8f16757de0f42bd97173eda1393b',
-//   en_data: 'a69W6h7/uEQrCyY3wlkwfNxofq75/xgKK8TC8V5zTshrHN7XddY7qSJRmrU1rn0f84RNJ6yi3nj+gTfMHMlXMg==',
-//   token: 'optional-token'
+//   timestamp: 1756367390,
+//   sign: 'ab4484c2a0743079fb4bcd685f28bdcb',
+//   en_data: '6MeWbuNLUrWTCIWImsATcbihd/I/xp7kYyufDSBdJ1g=',
+//   enc_payload: 'Z7zoj/bFujKdbbmd1kX0scE/KLwIypAsCsFYA27Gs8L7SbIho1xUOgDl2MAmOSSrloELHdZGdrTred9fwuCGk8HNvDsrWWk0A0r7KHKfm0J9JlnTHSXnc5eK+VExftnc1hRfdRsAFZ6uzO1iFoLQYbb6MKl5SEvFMeI4wGQqDQ44tmPvNJU3GRdtNmFoCotRTzqopH3OSg2PwahxG9JSg+jS82wVco8qnJrx3+E6+3spIHlaMJUMrqAxwQCi+aBxA312hcvwSYUW+9CeeAr0Q1vlOQzcGkhYutf4cmaGXWwh8KUayipw9+uUNER8Q0cOTNjVsieFU4nhgb2kGJVd0A=='
 // }
 ```
 
@@ -55,11 +56,12 @@ console.log(encrypted);
 ```javascript
 const { encryptRequest } = require("hejunjie-encrypted-request");
 
+const pubKey = `-----BEGIN PUBLIC KEY-----
+您的公钥，可以替换为读取pem文件等操作
+-----END PUBLIC KEY-----`;
+
 const options = {
-  appKey: "your-app-key", // 签名密钥，用于接口签名校验（32位字母或数字）
-  aesKey: "your-aes-key", // AES 加密的密钥（16位）
-  aesIv: "your-aes-iv", // AES 加密的初始化向量（16位）
-  token: "optional-token", // 可选的认证令牌，PHP 端可用于用户验证
+  rsaPubKey: pubKey,
 };
 
 const data = { message: "Hello World" };
@@ -72,12 +74,9 @@ console.log(encrypted);
 
 ### `EncryptOptions`​
 
-| 字段       | 类型   | 必需 | 描述                                      |
-| ---------- | ------ | ---- | ----------------------------------------- |
-| ​`appKey`​ | string | ✅   | 应用密钥，用于生成签名（32 位字母或数字） |
-| ​`aesKey`​ | string | ✅   | AES 加密密钥（16 位字母或数字）           |
-| ​`aesIv`​  | string | ✅   | AES 初始化向量（16 位字母或数字）         |
-| ​`token`​  | string | ❌   | 可选的认证令牌，PHP 端可用于用户验证      |
+| 字段          | 类型   | 必需 | 描述     |
+| ------------- | ------ | ---- | -------- |
+| ​`rsaPubKey`​ | string | ✅   | RSA 公钥 |
 
 ### `encryptRequest(data, options)`​
 
@@ -90,19 +89,12 @@ console.log(encrypted);
 
 ```typescript
 {
-  timestamp: number,  // 当前秒级时间戳
-  sign: string,       // MD5 签名
-  en_data: string,    // AES 加密后的数据
-  token?: string      // 可选 token
+  timestamp: number,   // 当前秒级时间戳
+  sign: string,        // MD5 签名
+  en_data: string,     // AES 加密后的数据
+  enc_payload: string  // RSA 加密的参与对称加密的 KEY
 }
 ```
-
-## 注意事项
-
-1. AES 加密使用 **AES-128-CBC**，密钥与向量需严格为 16 字节。
-2. 前端时间戳为秒级，与 PHP 后端默认时间差允许范围可配置。
-3. 确保 `appKey` / `aesKey` / `aesIv` 与 PHP 后端一致，否则签名校验会失败。
-4. token 为可选字段，PHP 端可根据白名单路径决定是否校验。
 
 ## 开发与构建
 
