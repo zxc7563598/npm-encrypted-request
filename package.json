@@ -1,6 +1,6 @@
 {
   "name": "hejunjie-encrypted-request",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "一个简单的前端加密助手，与 hejunjie/encrypted-request PHP 包配合使用 | A simple encryption helper for frontend to work with hejunjie/encrypted-request PHP package",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -27,13 +27,15 @@
   "author": "hejunjie",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^24.3.0",
     "@types/crypto-js": "^4.2.2",
+    "@types/node": "^24.3.0",
+    "@types/node-forge": "^1.3.14",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "crypto-js": "^4.2.0"
+    "crypto-js": "^4.2.0",
+    "node-forge": "^1.3.1"
   },
   "files": [
     "dist"
